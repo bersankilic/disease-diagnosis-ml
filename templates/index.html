@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Hastalık Teşhis Sistemi</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --light-bg: #ecf0f1;
+      }
+
+      body {
+        background: linear-gradient(135deg, var(--light-bg) 0%, #bdc3c7 100%);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background: var(--primary-color) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: bold;
+        color: white !important;
+      }
+
+      .hero-section {
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color),
+          var(--primary-color)
+        );
+        color: white;
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card-header {
+        background: var(--primary-color);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        font-weight: bold;
+      }
+
+      .symptom-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 10px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+      }
+
+      .symptom-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        background: white;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+      }
+
+      .symptom-item:hover {
+        background-color: #e9ecef;
+      }
+
+      .symptom-item input[type="checkbox"] {
+        margin-right: 10px;
+        transform: scale(1.2);
+      }
+
+      .symptom-item label {
+        margin: 0;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+
+      .btn-primary {
+        background: var(--secondary-color);
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-color);
+        transform: translateY(-2px);
+      }
+
+      .btn-clear {
+        background: var(--warning-color);
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: bold;
+        color: white;
+        transition: all 0.3s ease;
+      }
+
+      .btn-clear:hover {
+        background: #d35400;
+        transform: translateY(-2px);
+      }
+
+      .result-card {
+        background: white;
+        border-left: 5px solid var(--success-color);
+      }
+
+      .probability-bar {
+        height: 20px;
+        background: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+
+      .probability-fill {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--success-color),
+          var(--secondary-color)
+        );
+        transition: width 0.5s ease;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .spinner-border {
+        color: var(--secondary-color);
+      }
+
+      .feature-icon {
+        color: var(--secondary-color);
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .stats-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--secondary-color);
+      }
+
+      .search-box {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        transition: border-color 0.3s ease;
+      }
+
+      .search-box:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+      }
+
+      .footer {
+        background: var(--primary-color);
+        color: white;
+        padding: 2rem 0;
+        margin-top: 4rem;
+      }
+
+      .report-header {
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 15px;
+      }
+
+      .severity-badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+      }
+
+      .progress {
+        height: 8px;
+      }
+
+      .list-group-item {
+        border: none;
+        padding: 5px 0;
+      }
+
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2rem;
+        }
+
+        .symptom-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        .btn,
+        .navbar,
+        .footer {
+          display: none !important;
+        }
+
+        .card {
+          page-break-inside: avoid;
+          box-shadow: none;
+          border: 1px solid #dee2e6;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="fas fa-stethoscope me-2"></i>
+          AI Hastalık Teşhis Sistemi
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Ana Sayfa</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">Hakkında</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container text-center">
+        <h1 class="hero-title">
+          <i class="fas fa-brain me-3"></i>
+          AI Destekli Hastalık Teşhisi
+        </h1>
+        <p class="hero-subtitle">
+          Gelişmiş makine öğrenmesi algoritmaları ile semptomlarınızdan hastalık
+          teşhisi yapın
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+      <!-- Statistics -->
+      <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+          <div class="stats-card">
+            <i class="fas fa-robot feature-icon"></i>
+            <div class="stats-number">{{ models|length }}</div>
+            <div class="text-muted">Yapay Zeka Modeli</div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="stats-card">
+            <i class="fas fa-list-ul feature-icon"></i>
+            <div class="stats-number">{{ symptoms|length }}</div>
+            <div class="text-muted">Semptom Kategorisi</div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="stats-card">
+            <i class="fas fa-hospital feature-icon"></i>
+            <div class="stats-number">40+</div>
+            <div class="text-muted">Hastalık Kategorisi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Semptom Seçimi -->
+        <div class="col-lg-8 mb-4">
+          <div class="card">
+            <div class="card-header">
+              <i class="fas fa-clipboard-list me-2"></i>
+              Semptom Seçimi
+            </div>
+            <div class="card-body">
+              <form id="symptomForm">
+                <div class="mb-3">
+                  <label class="form-label">Model Seçimi:</label>
+                  <select class="form-select" id="modelSelect">
+                    {% for model in models %}
+                    <option value="{{ model }}">{{ model }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label"
+                    >Yaşadığınız Semptomları Seçin:</label
+                  >
+
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">
+                      Seçilen: <span id="selectedCount">0</span> semptom
+                    </span>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-clear"
+                      onclick="clearSymptoms()"
+                    >
+                      <i class="fas fa-trash me-1"></i>Temizle
+                    </button>
+                  </div>
+
+                  <!-- Arama Kutusu -->
+                  <div class="mb-3">
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control search-box"
+                        id="symptomSearch"
+                        placeholder="Semptom arayın... (örn: baş ağrısı, ateş, öksürük)"
+                        onkeyup="filterSymptoms()"
+                      />
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="clearSearch()"
+                        title="Aramayı temizle"
+                      >
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <small class="text-muted d-block mt-1">
+                      <span id="filteredCount">{{ symptoms|length }}</span>
+                      semptom gösteriliyor
+                    </small>
+                  </div>
+
+                  <div class="symptom-grid" id="symptomGrid">
+                    <!-- Semptomlar JavaScript ile yüklenecek -->
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-diagnoses me-2"></i>
+                    Teşhis Et
+                  </button>
+                </div>
+              </form>
+
+              <div class="loading" id="loading">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Yükleniyor...</span>
+                </div>
+                <p class="mt-2">AI modeli analiz ediyor...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Sonuçlar -->
+        <div class="col-lg-4 mb-4">
+          <div class="card result-card" id="resultCard" style="display: none">
+            <div class="card-header">
+              <i class="fas fa-chart-line me-2"></i>
+              Teşhis Sonucu
+            </div>
+            <div class="card-body">
+              <div id="predictionResult"></div>
+
+              <!-- Rapor Butonu -->
+              <div
+                class="text-center mt-3"
+                id="reportSection"
+                style="display: none"
+              >
+                <button
+                  class="btn btn-info btn-sm"
+                  onclick="generateDetailedReport()"
+                >
+                  <i class="fas fa-file-medical me-2"></i>
+                  Detaylı Rapor Oluştur
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detaylı Rapor Kartı -->
+          <div class="card mt-4" id="detailedReportCard" style="display: none">
+            <div class="card-header">
+              <i class="fas fa-file-medical me-2"></i>
+              Detaylı Teşhis Raporu
+              <button
+                class="btn btn-sm btn-outline-light float-end"
+                onclick="printReport()"
+              >
+                <i class="fas fa-print"></i>
+              </button>
+            </div>
+            <div class="card-body" id="detailedReportContent">
+              <!-- Detaylı rapor içeriği buraya gelecek -->
+            </div>
+          </div>
+
+          <!-- Yardım Kartı -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <i class="fas fa-info-circle me-2"></i>
+              Nasıl Kullanılır?
+            </div>
+            <div class="card-body">
+              <ol class="mb-0">
+                <li class="mb-2">Kullanılacak AI modelini seçin</li>
+                <li class="mb-2">Arama kutusunu kullanarak semptom bulun</li>
+                <li class="mb-2">Yaşadığınız semptomları işaretleyin</li>
+                <li class="mb-2">"Teşhis Et" butonuna tıklayın</li>
+                <li>Sonuçları inceleyin</li>
+              </ol>
+              <div class="alert alert-warning mt-3 mb-0">
+                <small>
+                  <i class="fas fa-exclamation-triangle me-1"></i>
+                  Bu sistem sadece bilgilendirme amaçlıdır. Kesin teşhis için
+                  mutlaka doktora başvurun.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container text-center">
+        <p class="mb-0">AI Hastalık Teşhis Sistemi - 2025</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Semptom verilerini JavaScript'e aktar
+      const allSymptoms = [
+        {% for symptom in symptoms %}
+        {
+          english: "{{ symptom.english }}",
+          turkish: "{{ symptom.turkish }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ];
+
+      // Sayfa yüklendiğinde semptomları göster
+      document.addEventListener('DOMContentLoaded', function() {
+        renderSymptoms(allSymptoms);
+        updateFilteredCount(allSymptoms.length);
+        updateSelectedCount();
+      });
+
+      function renderSymptoms(symptoms) {
+        const grid = document.getElementById('symptomGrid');
+        grid.innerHTML = '';
+
+        symptoms.forEach((symptom, index) => {
+          const div = document.createElement('div');
+          div.className = 'symptom-item';
+          div.innerHTML = `
+            <input
+              type="checkbox"
+              id="symptom_${index}"
+              name="symptoms"
+              value="${symptom.english}"
+              onchange="updateSelectedCount()"
+            />
+            <label for="symptom_${index}">
+              ${symptom.turkish}
+            </label>
+          `;
+          grid.appendChild(div);
+        });
+      }
+
+      function filterSymptoms() {
+        const searchText = document.getElementById('symptomSearch').value.toLowerCase();
+
+        if (searchText === '') {
+          renderSymptoms(allSymptoms);
+          updateFilteredCount(allSymptoms.length);
+          return;
+        }
+
+        const filteredSymptoms = allSymptoms.filter(symptom =>
+          symptom.turkish.toLowerCase().includes(searchText) ||
+          symptom.english.toLowerCase().includes(searchText)
+        );
+
+        renderSymptoms(filteredSymptoms);
+        updateFilteredCount(filteredSymptoms.length);
+      }
+
+      function clearSearch() {
+        document.getElementById('symptomSearch').value = '';
+        renderSymptoms(allSymptoms);
+        updateFilteredCount(allSymptoms.length);
+      }
+
+      function updateFilteredCount(count) {
+        document.getElementById('filteredCount').textContent = count;
+      }
+
+      function updateSelectedCount() {
+        const checkedBoxes = document.querySelectorAll('input[name="symptoms"]:checked');
+        document.getElementById("selectedCount").textContent = checkedBoxes.length;
+      }
+
+      function clearSymptoms() {
+        const checkboxes = document.querySelectorAll('input[name="symptoms"]');
+        checkboxes.forEach((cb) => (cb.checked = false));
+        updateSelectedCount();
+      }
+
+      function showLoading() {
+        document.getElementById("loading").style.display = "block";
+        document.getElementById("resultCard").style.display = "none";
+      }
+
+      function hideLoading() {
+        document.getElementById("loading").style.display = "none";
+      }      function displayResult(result) {
+        const resultDiv = document.getElementById("predictionResult");
+
+        if (result.error) {
+          resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              ${result.error}
+            </div>
+          `;
+          document.getElementById("reportSection").style.display = "none";
+        } else {
+          let probabilitiesHtml = "";
+          if (result.probabilities && result.probabilities.length > 0) {
+            probabilitiesHtml = `
+              <h6 class="mt-3">Olasılık Dağılımı:</h6>
+              ${result.probabilities
+                .map(
+                  ([disease, prob]) => `
+                  <div class="mb-2">
+                    <div class="d-flex justify-content-between">
+                      <small>${disease}</small>
+                      <small>${(prob * 100).toFixed(1)}%</small>
+                    </div>
+                    <div class="probability-bar">
+                      <div class="probability-fill" style="width: ${
+                        prob * 100
+                      }%"></div>
+                    </div>
+                  </div>
+                `
+                )
+                .join("")}
+            `;
+          }
+
+          resultDiv.innerHTML = `
+            <div class="alert alert-success">
+              <h5 class="alert-heading">
+                <i class="fas fa-check-circle me-2"></i>
+                Tahmin Edilen Hastalık
+              </h5>
+              <h4 class="text-success">${result.prediction}</h4>
+              <hr>
+              <small class="text-muted">
+                Model: ${result.model_used}
+              </small>
+            </div>
+            ${probabilitiesHtml}
+            <div class="alert alert-info mt-3">
+              <i class="fas fa-info-circle me-2"></i>
+              <small>Bu sonuç AI tahminidir. Kesin teşhis için doktora başvurunuz.</small>
+            </div>
+          `;
+
+          // Rapor butonunu göster ve geçici olarak sonucu sakla
+          document.getElementById("reportSection").style.display = "block";
+          window.currentPrediction = result;
+        }
+
+        document.getElementById("resultCard").style.display = "block";
+      }
+
+      // Detaylı rapor oluşturma fonksiyonu
+      async function generateDetailedReport() {
+        if (!window.currentPrediction) {
+          alert('Önce bir teşhis yapmalısınız!');
+          return;
+        }
+
+        const selectedSymptoms = Array.from(
+          document.querySelectorAll('input[name="symptoms"]:checked')
+        ).map((cb) => cb.value);
+
+        try {
+          const response = await fetch('/generate-report', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              prediction_data: window.currentPrediction,
+              symptoms: selectedSymptoms
+            }),
+          });
+
+          const reportData = await response.json();
+
+          if (reportData.success) {
+            displayDetailedReport(reportData.report);
+          } else {
+            alert('Rapor oluşturulurken hata: ' + reportData.error);
+          }
+        } catch (error) {
+          alert('Rapor oluşturma hatası: ' + error.message);
+        }
+      }
+
+      // Detaylı raporu gösterme fonksiyonu
+      function displayDetailedReport(report) {
+        const reportDiv = document.getElementById("detailedReportContent");
+        const diseaseInfo = window.currentPrediction.disease_info || {};
+
+        const severityColor = getSeverityColor(diseaseInfo.severity || 'Bilinmiyor');
+
+        reportDiv.innerHTML = `
+          <div class="report-header text-center mb-4">
+            <h5><i class="fas fa-file-medical me-2"></i>Medikal Teşhis Raporu</h5>
+            <p class="text-muted">Rapor No: ${report.report_id}</p>
+            <p class="text-muted">Tarih: ${report.timestamp}</p>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card border-primary mb-3">
+                <div class="card-header bg-primary text-white">
+                  <i class="fas fa-diagnoses me-2"></i>Teşhis Bilgileri
+                </div>
+                <div class="card-body">
+                  <p><strong>Tahmin Edilen Hastalık:</strong></p>
+                  <h5 class="text-primary">${report.diagnosis}</h5>
+                  <p><strong>Kullanılan Model:</strong> ${report.model_used}</p>
+                  <p><strong>Ciddiyet Seviyesi:</strong>
+                    <span class="badge" style="background-color: ${severityColor}">
+                      ${diseaseInfo.severity || 'Bilinmiyor'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card border-info mb-3">
+                <div class="card-header bg-info text-white">
+                  <i class="fas fa-list-ul me-2"></i>Belirtilen Semptomlar
+                </div>
+                <div class="card-body">
+                  <ul class="list-group list-group-flush">
+                    ${report.patient_symptoms.map(symptom =>
+                      `<li class="list-group-item"><i class="fas fa-check text-success me-2"></i>${symptom}</li>`
+                    ).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          ${diseaseInfo.description ? `
+          <div class="card border-success mb-3">
+            <div class="card-header bg-success text-white">
+              <i class="fas fa-info-circle me-2"></i>Hastalık Açıklaması
+            </div>
+            <div class="card-body">
+              <p>${diseaseInfo.description}</p>
+            </div>
+          </div>
+          ` : ''}
+
+          ${report.probabilities.length > 0 ? `
+          <div class="card border-warning mb-3">
+            <div class="card-header bg-warning text-white">
+              <i class="fas fa-chart-bar me-2"></i>Olasılık Analizi
+            </div>
+            <div class="card-body">
+              ${report.probabilities.map(([disease, prob]) => `
+                <div class="mb-2">
+                  <div class="d-flex justify-content-between">
+                    <span>${disease}</span>
+                    <span>${(prob * 100).toFixed(1)}%</span>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: ${prob * 100}%"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          ` : ''}
+
+          <div class="row">
+            ${diseaseInfo.symptoms ? `
+            <div class="col-md-6">
+              <div class="card border-secondary mb-3">
+                <div class="card-header">
+                  <i class="fas fa-thermometer me-2"></i>Tipik Semptomlar
+                </div>
+                <div class="card-body">
+                  <ul>
+                    ${diseaseInfo.symptoms.map(symptom => `<li>${symptom}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            ` : ''}
+
+            ${diseaseInfo.causes ? `
+            <div class="col-md-6">
+              <div class="card border-secondary mb-3">
+                <div class="card-header">
+                  <i class="fas fa-search me-2"></i>Olası Nedenler
+                </div>
+                <div class="card-body">
+                  <ul>
+                    ${diseaseInfo.causes.map(cause => `<li>${cause}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            ` : ''}
+          </div>
+
+          <div class="row">
+            ${diseaseInfo.treatment ? `
+            <div class="col-md-6">
+              <div class="card border-success mb-3">
+                <div class="card-header bg-light">
+                  <i class="fas fa-pills me-2"></i>Önerilen Tedavi
+                </div>
+                <div class="card-body">
+                  <ul>
+                    ${diseaseInfo.treatment.map(treatment => `<li>${treatment}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            ` : ''}
+
+            ${diseaseInfo.prevention ? `
+            <div class="col-md-6">
+              <div class="card border-primary mb-3">
+                <div class="card-header bg-light">
+                  <i class="fas fa-shield-alt me-2"></i>Önleyici Tedbirler
+                </div>
+                <div class="card-body">
+                  <ul>
+                    ${diseaseInfo.prevention.map(prevention => `<li>${prevention}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            ` : ''}
+          </div>
+
+          ${diseaseInfo.when_to_see_doctor ? `
+          <div class="alert alert-danger">
+            <h6><i class="fas fa-exclamation-triangle me-2"></i>Doktora Başvuru Zamanı</h6>
+            <ul class="mb-0">
+              ${diseaseInfo.when_to_see_doctor.map(condition => `<li>${condition}</li>`).join('')}
+            </ul>
+          </div>
+          ` : ''}
+
+          <div class="alert alert-warning">
+            <h6><i class="fas fa-exclamation-circle me-2"></i>Önemli Uyarı</h6>
+            <p class="mb-0">Bu rapor yapay zeka tahminine dayanmaktadır ve kesin teşhis değildir.
+            Sağlık durumunuz hakkında kesin bilgi için mutlaka bir sağlık profesyoneline danışınız.</p>
+          </div>
+
+          <div class="text-center mt-4">
+            <small class="text-muted">
+              Bu rapor AI Hastalık Teşhis Sistemi tarafından ${report.timestamp} tarihinde oluşturulmuştur.
+            </small>
+          </div>
+        `;
+
+        document.getElementById("detailedReportCard").style.display = "block";
+
+        // Rapor kartına kaydır
+        document.getElementById("detailedReportCard").scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+
+      // Ciddiyet seviyesine göre renk belirleme
+      function getSeverityColor(severity) {
+        switch(severity.toLowerCase()) {
+          case 'hafif': return '#28a745';
+          case 'hafif-orta': return '#ffc107';
+          case 'orta': return '#fd7e14';
+          case 'orta-ciddi': return '#dc3545';
+          case 'ciddi': return '#dc3545';
+          case 'çok ciddi - acil': return '#721c24';
+          default: return '#6c757d';
+        }
+      }
+
+      // Raporu yazdırma fonksiyonu
+      function printReport() {
+        const reportContent = document.getElementById("detailedReportContent").innerHTML;
+        const printWindow = window.open('', '_blank');
+
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Medikal Teşhis Raporu</title>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+              body { font-size: 12px; }
+              .card { page-break-inside: avoid; }
+              @media print {
+                .btn { display: none; }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              ${reportContent}
+            </div>
+          </body>
+          </html>
+        `);
+
+        printWindow.document.close();
+        printWindow.print();
+      }
+
+      document.getElementById("symptomForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const checkedSymptoms = Array.from(
+          document.querySelectorAll('input[name="symptoms"]:checked')
+        ).map((cb) => cb.value);
+
+        if (checkedSymptoms.length === 0) {
+          alert("Lütfen en az bir semptom seçin!");
+          return;
+        }
+
+        const selectedModel = document.getElementById("modelSelect").value;
+
+        showLoading();
+
+        try {
+          const response = await fetch("/predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              symptoms: checkedSymptoms,
+              model: selectedModel,
+            }),
+          });
+
+          const result = await response.json();
+          hideLoading();
+          displayResult(result);
+        } catch (error) {
+          hideLoading();
+          displayResult({ error: "Bağlantı hatası: " + error.message });
+        }
+      });
+    </script>
+  </body>
+</html>

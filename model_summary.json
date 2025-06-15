@@ -1,0 +1,31 @@
+{
+  "total_models": 9,
+  "feature_count": 132,
+  "disease_count": 41,
+  "training_samples": 4920,
+  "test_samples": 42,
+  "features": [
+    "itching",
+    "skin_rash",
+    "nodal_skin_eruptions",
+    "continuous_sneezing",
+    "shivering",
+    "chills",
+    "joint_pain",
+    "stomach_pain",
+    "acidity",
+    "ulcers_on_tongue"
+  ],
+  "diseases": [
+    "(vertigo) Paroymsal  Positional Vertigo",
+    "AIDS",
+    "Acne",
+    "Alcoholic hepatitis",
+    "Allergy",
+    "Arthritis",
+    "Bronchial Asthma",
+    "Cervical spondylosis",
+    "Chicken pox",
+    "Chronic cholestasis"
+  ]
+}

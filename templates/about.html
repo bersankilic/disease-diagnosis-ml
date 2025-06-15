@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hakkında - AI Hastalık Teşhis Sistemi</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --light-bg: #ecf0f1;
+      }
+
+      body {
+        background: linear-gradient(135deg, var(--light-bg) 0%, #bdc3c7 100%);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background: var(--primary-color) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: bold;
+        color: white !important;
+      }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .card-header {
+        background: var(--primary-color);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        font-weight: bold;
+      }
+
+      .feature-icon {
+        color: var(--secondary-color);
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .tech-badge {
+        background: var(--secondary-color);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin: 3px;
+        display: inline-block;
+      }
+
+      .model-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid var(--secondary-color);
+      }
+
+      .accuracy-bar {
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 5px;
+      }
+
+      .accuracy-fill {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--success-color),
+          var(--secondary-color)
+        );
+      }
+
+      .footer {
+        background: var(--primary-color);
+        color: white;
+        padding: 2rem 0;
+        margin-top: 4rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="fas fa-stethoscope me-2"></i>
+          AI Hastalık Teşhis Sistemi
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Ana Sayfa</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/about">Hakkında</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <!-- Proje Hakkında -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-info-circle me-2"></i>
+          Proje Hakkında
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-8">
+              <h4>AI Destekli Hastalık Teşhis Sistemi</h4>
+              <p class="lead">
+                Bu sistem, gelişmiş makine öğrenmesi algoritmaları kullanarak
+                kullanıcıların bildirdiği semptomlardan hareketle olası hastalık
+                teşhisleri yapar.
+              </p>
+              <p>
+                Sistem, kapsamlı bir veri seti üzerinde eğitilmiş birden fazla
+                makine öğrenmesi modelini kullanarak yüksek doğruluk oranlarında
+                tahminler sunar. Ancak, bu tahminler kesinlikle tıbbi tavsiye
+                niteliği taşımaz ve profesyonel tıbbi değerlendirmenin yerini
+                tutmaz.
+              </p>
+            </div>
+            <div class="col-md-4 text-center">
+              <i class="fas fa-brain feature-icon"></i>
+              <h5>Yapay Zeka Destekli</h5>
+              <p class="text-muted">
+                Çoklu model yaklaşımı ile yüksek doğruluk
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Teknolojiler -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-cogs me-2"></i>
+          Kullanılan Teknolojiler
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Backend Teknolojileri</h5>
+              <div class="mb-3">
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">Flask</span>
+                <span class="tech-badge">Scikit-learn</span>
+                <span class="tech-badge">Pandas</span>
+                <span class="tech-badge">NumPy</span>
+                <span class="tech-badge">XGBoost</span>
+                <span class="tech-badge">LightGBM</span>
+              </div>
+
+              <h5>Machine Learning Modelleri</h5>
+              <div>
+                <span class="tech-badge">Random Forest</span>
+                <span class="tech-badge">Logistic Regression</span>
+                <span class="tech-badge">SVM</span>
+                <span class="tech-badge">Naive Bayes</span>
+                <span class="tech-badge">Gradient Boosting</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h5>Frontend Teknolojileri</h5>
+              <div class="mb-3">
+                <span class="tech-badge">HTML5</span>
+                <span class="tech-badge">CSS3</span>
+                <span class="tech-badge">JavaScript</span>
+                <span class="tech-badge">Bootstrap 5</span>
+                <span class="tech-badge">Font Awesome</span>
+              </div>
+
+              <h5>Veri Görselleştirme</h5>
+              <div>
+                <span class="tech-badge">Matplotlib</span>
+                <span class="tech-badge">Seaborn</span>
+                <span class="tech-badge">Plotly</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Performansları -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-chart-line me-2"></i>
+          Model Performansları
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="model-card">
+                <h6>Support Vector Machine (SVM)</h6>
+                <div class="d-flex justify-content-between">
+                  <span>Doğruluk:</span>
+                  <span><strong>100.0%</strong></span>
+                </div>
+                <div class="accuracy-bar">
+                  <div class="accuracy-fill" style="width: 100%"></div>
+                </div>
+              </div>
+
+              <div class="model-card">
+                <h6>Logistic Regression</h6>
+                <div class="d-flex justify-content-between">
+                  <span>Doğruluk:</span>
+                  <span><strong>100.0%</strong></span>
+                </div>
+                <div class="accuracy-bar">
+                  <div class="accuracy-fill" style="width: 100%"></div>
+                </div>
+              </div>
+
+              <div class="model-card">
+                <h6>Naive Bayes</h6>
+                <div class="d-flex justify-content-between">
+                  <span>Doğruluk:</span>
+                  <span><strong>100.0%</strong></span>
+                </div>
+                <div class="accuracy-bar">
+                  <div class="accuracy-fill" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="model-card">
+                <h6>Random Forest</h6>
+                <div class="d-flex justify-content-between">
+                  <span>Doğruluk:</span>
+                  <span><strong>97.6%</strong></span>
+                </div>
+                <div class="accuracy-bar">
+                  <div class="accuracy-fill" style="width: 97.6%"></div>
+                </div>
+              </div>
+
+              <div class="model-card">
+                <h6>XGBoost</h6>
+                <div class="d-flex justify-content-between">
+                  <span>Doğruluk:</span>
+                  <span><strong>97.6%</strong></span>
+                </div>
+                <div class="accuracy-bar">
+                  <div class="accuracy-fill" style="width: 97.6%"></div>
+                </div>
+              </div>
+
+              <div class="model-card">
+                <h6>Gradient Boosting</h6>
+                <div class="d-flex justify-content-between">
+                  <span>Doğruluk:</span>
+                  <span><strong>97.6%</strong></span>
+                </div>
+                <div class="accuracy-bar">
+                  <div class="accuracy-fill" style="width: 97.6%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Veri Seti -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-database me-2"></i>
+          Veri Seti Bilgileri
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <h2 class="text-primary">{{ symptom_count }}</h2>
+              <p class="text-muted">Semptom Kategorisi</p>
+            </div>
+            <div class="col-md-4 text-center">
+              <h2 class="text-primary">{{ disease_count }}</h2>
+              <p class="text-muted">Hastalık Kategorisi</p>
+            </div>
+            <div class="col-md-4 text-center">
+              <h2 class="text-primary">{{ model_count }}</h2>
+              <p class="text-muted">Aktif ML Modeli</p>
+            </div>
+          </div>
+          <hr />
+          <h5>Veri Seti Özellikleri</h5>
+          <ul>
+            <li><strong>Eğitim Verisi:</strong> 4,920 örnek</li>
+            <li><strong>Test Verisi:</strong> 42 örnek</li>
+            <li>
+              <strong>Özellik Türü:</strong> İkili (Binary) - Her semptom 0 veya
+              1 değeri alır
+            </li>
+            <li>
+              <strong>Hedef Değişken:</strong> 41 farklı hastalık kategorisi
+            </li>
+            <li>
+              <strong>Veri Kalitesi:</strong> Temizlenmiş ve ön işlemden
+              geçirilmiş
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Metodoloji -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-microscope me-2"></i>
+          Metodoloji
+        </div>
+        <div class="card-body">
+          <h5>Veri Ön İşleme</h5>
+          <ul>
+            <li>Eksik değerlerin tespit edilmesi ve temizlenmesi</li>
+            <li>Kategorik verilerin kodlanması (One-hot encoding)</li>
+            <li>Özellik mühendisliği ve veri standardizasyonu</li>
+          </ul>
+
+          <h5>Model Eğitimi</h5>
+          <ul>
+            <li>Çoklu model yaklaşımı ile ensemble learning</li>
+            <li>5-fold çapraz doğrulama ile model validasyonu</li>
+            <li>Hiperparametre optimizasyonu</li>
+          </ul>
+
+          <h5>Değerlendirme Metrikleri</h5>
+          <ul>
+            <li>Doğruluk (Accuracy)</li>
+            <li>Kesinlik (Precision)</li>
+            <li>Duyarlılık (Recall)</li>
+            <li>F1-Score</li>
+            <li>ROC-AUC analizi</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sorumluluk Reddi -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          Sorumluluk Reddi
+        </div>
+        <div class="card-body">
+          <div class="alert alert-warning">
+            <h5 class="alert-heading">Tıbbi Tavsiye Değildir</h5>
+            <p>
+              Bu sistem yalnızca bilgilendirme amaçlıdır ve kesinlikle tıbbi
+              tavsiye, teşhis veya tedavi önerisi niteliği taşımaz. Sistem
+              tarafından verilen sonuçlar profesyonel tıbbi değerlendirmenin
+              yerini tutmaz.
+            </p>
+            <hr />
+            <p class="mb-0">
+              <strong
+                >Sağlık sorunlarınız için mutlaka uzman bir doktora
+                başvurunuz.</strong
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container text-center">
+        <p class="mb-0">AI Hastalık Teşhis Sistemi - 2025</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
